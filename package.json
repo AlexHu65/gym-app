@@ -1,0 +1,15 @@
+{
+  "name": "gym-app-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend/client",
+    "frontend/admin"
+  ],
+  "scripts": {
+    "docs": "echo 'Open docs/backlog.md and docs/architecture.md'",
+    "dev:client": "echo 'Run the Angular/Ionic client from frontend/client'",
+    "dev:admin": "echo 'Run the Angular admin from frontend/admin'",
+    "dev:backend": "echo 'Run the Laravel backend from backend'"
+  }
+}
+

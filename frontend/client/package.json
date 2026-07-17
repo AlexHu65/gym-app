@@ -1,0 +1,24 @@
+{
+  "name": "@gym-app/client",
+  "private": true,
+  "scripts": {
+    "start": "echo 'Boot the Angular/Ionic client from src/main.ts'",
+    "build": "echo 'Build client app'",
+    "test": "echo 'Run client tests'"
+  },
+  "dependencies": {
+    "@angular/common": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "@ionic/angular": "^8.0.0",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.6.0",
+    "zone.js": "^0.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
+
