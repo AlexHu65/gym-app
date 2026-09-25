@@ -1,140 +1,171 @@
 # Backlog tecnico por sprints
 
-Cadencia propuesta: sprints de 2 semanas.
+Cadencia: sprints de 2 semanas.  
+Capacidad: 1 persona + Cursor/agente.  
+Fuente de fechas: [`roadmap.md`](roadmap.md).  
+Beta abierta: enero 2027.
 
-## Sprint 0
+## Sprint 0 — Docs y arranque
 
-Objetivo:
-
-- preparar el terreno tecnico y operativo.
-
-Entregables:
-
-- estructura del monorepo
-- Docker Compose local
-- convenciones de codigo
-- README tecnico inicial
-- contrato de carpetas y naming
-
-## Sprint 1
-
-Objetivo:
-
-- base de seguridad y acceso.
+| | |
+|---|---|
+| Fechas | 1–14 ago 2026 |
+| Objetivo | terreno tecnico y operativo listo |
 
 Entregables:
 
-- autenticacion con Sanctum
-- roles y permisos
-- middleware de proteccion
-- seeders iniciales de usuarios de prueba
+- [x] estructura del monorepo
+- [x] Docker Compose local
+- [ ] README operativo validado en maquina local
+- [ ] getting-started seguido end-to-end
+- [ ] `.env` backend con Postgres (no sqlite)
+- [ ] smoke `GET /api/v1/health`
+- [x] convenciones de codigo documentadas
+- [x] contrato de carpetas y naming
 
-## Sprint 2
+## Sprint 1 — Auth y acceso
 
-Objetivo:
-
-- dominio de ejercicios e importacion del dataset.
-
-Entregables:
-
-- migracion base
-- modelos de ejercicios, traducciones y media
-- importador del dataset `exercises-dataset`
-- validacion de integridad de datos
-
-## Sprint 3
-
-Objetivo:
-
-- API de catalogo lista para consumo.
+| | |
+|---|---|
+| Fechas | 15–28 ago 2026 |
+| Objetivo | base de seguridad y acceso |
 
 Entregables:
 
-- listado de ejercicios
-- detalle de ejercicio
-- filtros y paginacion
-- busqueda por nombre, body part, equipment y target
-- soporte multilenguaje en lectura
+- autenticacion Sanctum estable (login / logout / me)
+- roles y permisos seedados
+- middleware / policies de proteccion
+- seeders de usuarios de prueba (admin)
+- pruebas basicas de auth
 
-## Sprint 4
+## Sprint 2 — Dominio e importacion
 
-Objetivo:
-
-- backoffice v1.
+| | |
+|---|---|
+| Fechas | 29 ago – 11 sep 2026 |
+| Objetivo | ejercicios + dataset importable |
 
 Entregables:
 
+- migraciones core estables
+- modelos ejercicios, traducciones, media, taxonomias
+- importador idempotente de `exercises-dataset`
+- validacion de integridad basica
+- listado, detalle, filtros, paginacion, multilenguaje en lectura
+
+## Sprint 3 — Admin scaffold
+
+| | |
+|---|---|
+| Fechas | 12–25 sep 2026 |
+| Objetivo | backoffice arrancable |
+
+Entregables:
+
+- scaffold real Angular admin
 - login de administracion
-- dashboard base
+- shell, routing y dashboard base
+- consumo de API auth + listado admin
+
+## Sprint 4 — CRUD editorial
+
+| | |
+|---|---|
+| Fechas | 26 sep – 9 oct 2026 |
+| Objetivo | editar y publicar contenido |
+
+Entregables:
+
 - CRUD de ejercicios
 - edicion de traducciones
-- estados draft/review/published/archived
+- estados draft / review / published / archived
+- busqueda y filtros internos
 
-## Sprint 5
+## Sprint 5 — Media, taxonomias, auditoria
 
-Objetivo:
-
-- media, taxonomias y auditoria.
+| | |
+|---|---|
+| Fechas | 10–23 oct 2026 |
+| Objetivo | operar media y calidad editorial |
 
 Entregables:
 
-- carga de imagen y GIF
+- carga de imagen y GIF (MinIO)
 - validacion de media
-- catalogos de taxonomia
+- catalogos de taxonomia en UI
 - log de cambios
-- importacion masiva controlada
+- importacion masiva controlada desde admin
 
-## Sprint 6
+## Sprint 6 — Cliente PWA catalogo
 
-Objetivo:
-
-- cliente PWA v1.
+| | |
+|---|---|
+| Fechas | 24 oct – 6 nov 2026 |
+| Objetivo | experiencia de descubrimiento |
 
 Entregables:
 
+- scaffold real Angular + Ionic
 - home
-- busqueda
-- filtros
-- detalle de ejercicio
+- busqueda y filtros
+- detalle de ejercicio con media
+
+## Sprint 7 — Favoritos, auth client, idioma
+
+| | |
+|---|---|
+| Fechas | 7–20 nov 2026 |
+| Objetivo | cuenta y personalizacion basica |
+
+Entregables:
+
+- login / registro en client
 - favoritos
-- login
+- selector de idioma
+- sesion persistente
 
-## Sprint 7
+## Sprint 8 — Rutinas y seguimiento
 
-Objetivo:
-
-- rutinas y seguimiento.
+| | |
+|---|---|
+| Fechas | 21 nov – 11 dic 2026 |
+| Objetivo | valor de entrenamiento |
 
 Entregables:
 
-- creacion de rutina
+- creacion de rutina simple
 - registro de sesion
-- historial
-- progreso basico
+- historial minimo
+- progreso basico (conteos)
 
-## Sprint 8
+## Sprint 9 — Beta cerrada
 
-Objetivo:
-
-- observabilidad y optimizacion.
+| | |
+|---|---|
+| Fechas | 12–31 dic 2026 |
+| Objetivo | estabilizacion y release candidate cerrado |
 
 Entregables:
 
-- eventos de analitica
-- logs utiles
-- consultas optimizadas
+- pruebas integrales / E2E manuales
+- correcciones UX criticas
 - hardening de permisos
+- staging y checklist de [`beta-plan.md`](beta-plan.md)
+- 5–15 testers invitados
 
-## Sprint 9
+## Enero 2027 — Beta abierta
 
-Objetivo:
-
-- estabilizacion final y release candidate.
+| | |
+|---|---|
+| Fechas | 1–31 ene 2027 |
+| Objetivo | registro publico controlado |
 
 Entregables:
 
-- pruebas integrales
-- correcciones UX
-- revisiones de accesibilidad
-- staging y checklist de produccion
+- landing / onboarding minimo
+- monitoreo y logs basicos
+- canal de feedback unico
+- metricas minimas (registros, vistas, sesiones, D7)
+- solo bugs y P0 (feature freeze)
 
+Ver checklist completo en [`beta-plan.md`](beta-plan.md).

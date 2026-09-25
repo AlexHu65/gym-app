@@ -1,7 +1,13 @@
 # Plan de producto y arquitectura para app de entrenamiento
 
 Fecha de elaboracion: 17 de julio de 2026
-Objetivo de salida: beta publica antes de diciembre de 2026
+Ultima actualizacion de calendario: 31 de julio de 2026
+Capacidad: 1 persona + Cursor/agente
+Objetivo de salida: beta abierta en enero de 2027 (beta cerrada en diciembre de 2026)
+
+Calendario vivo (fechas y sprints): [`docs/roadmap.md`](docs/roadmap.md)  
+Arranque local: [`docs/getting-started.md`](docs/getting-started.md)  
+Plan de betas: [`docs/beta-plan.md`](docs/beta-plan.md)
 
 ## 1. Contexto
 
@@ -159,7 +165,7 @@ Alcance MVP:
 
 ## 5. Definicion funcional del MVP
 
-Si el objetivo es salir antes de diciembre, el MVP debe enfocarse en lo que aporta valor real y se puede terminar a tiempo.
+Si el objetivo es la beta abierta en enero de 2027 (con una sola persona), el MVP debe enfocarse en lo que aporta valor real y se puede terminar a tiempo.
 
 ### Para el usuario final
 
@@ -337,94 +343,93 @@ Flujo recomendado:
 5. Se publica al catalogo de la app.
 6. Cualquier cambio queda auditado.
 
-## 8. Plan de trabajo hasta diciembre de 2026
+## 8. Plan de trabajo hasta beta abierta (enero 2027)
 
-### Fase 0 - Definicion y preparacion
-Periodo: 17 al 31 de julio de 2026
+> La fuente viva de fechas es [`docs/roadmap.md`](docs/roadmap.md). Resumen:
 
-Entregables:
-
-- PRDs cerrados
-- alcance MVP aprobado
-- arquitectura tecnica aprobada
-- definicion de roles
-- wireframes iniciales
-- repositorios y ambientes creados
-- convenciones de codigo y despliegue
-
-### Fase 1 - Fundacion tecnica
-Periodo: agosto de 2026
+### Fase 0 - Definicion, docs y arranque
+Periodo: 17 jul – 14 ago 2026
 
 Entregables:
 
-- proyecto Laravel creado
-- esquema PostgreSQL definido
-- autenticacion y roles listos
-- importador inicial del dataset
-- almacenamiento de media configurado
-- endpoints base del catalogo
-- logs y backups basicos
+- PRDs y alcance MVP
+- arquitectura tecnica
+- monorepo, Compose y convenciones
+- README + getting-started + roadmap + beta-plan
+
+### Fase 1 - Fundacion tecnica (API)
+Periodo: 15 ago – 11 sep 2026
+
+Entregables:
+
+- autenticacion Sanctum y roles
+- esquema PostgreSQL estable
+- importador idempotente del dataset
+- endpoints base del catalogo con filtros
+- media S3/MinIO configurada en local
 
 ### Fase 2 - Backoffice
-Periodo: septiembre de 2026
+Periodo: 12 sep – 23 oct 2026
 
 Entregables:
 
+- scaffold Angular admin
 - login de admin
-- CRUD de ejercicios
-- gestion de traducciones
+- CRUD de ejercicios y traducciones
 - carga de media
-- filtros y busqueda
 - publicacion/despublicacion
 - auditoria basica
 
-### Fase 3 - App cliente
-Periodo: octubre de 2026
+### Fase 3 - App cliente (catalogo)
+Periodo: 24 oct – 20 nov 2026
 
 Entregables:
 
-- home
-- busqueda y filtros
+- scaffold Angular + Ionic PWA
+- home, busqueda y filtros
 - detalle de ejercicio
-- favoritos
+- favoritos, login y selector de idioma
+
+### Fase 4 - Rutinas, sesiones y calidad
+Periodo: 21 nov – 11 dic 2026
+
+Entregables:
+
 - rutina simple
-- registro de entrenamiento
-- selector de idioma
+- registro de sesion e historial
+- ajustes de UX y permisos previos a beta
 
-### Fase 4 - End to end y calidad
-Periodo: noviembre de 2026
-
-Entregables:
-
-- pruebas integrales
-- ajustes de UX
-- optimizacion de consultas
-- control de errores
-- control de permisos
-- validacion de carga masiva
-- beta cerrada
-
-### Fase 5 - Preparacion de salida
-Periodo: 1 al 15 de diciembre de 2026
+### Fase 5 - Beta cerrada
+Periodo: 12–31 dic 2026
 
 Entregables:
 
-- hardening
-- correcciones finales
-- monitoreo
-- documentacion operativa
-- publicacion de beta o release inicial
+- pruebas E2E manuales
+- staging
+- 5–15 testers invitados
+- hardening y correcciones P0/P1
+
+### Fase 6 - Beta abierta
+Periodo: enero 2027
+
+Entregables:
+
+- registro publico controlado
+- monitoreo basico y feedback
+- feature freeze (solo bugs/P0)
+- metricas minimas de uso
 
 ## 9. Hitos y criterios de exito
 
 ### Hitos
 
-- H1: PRD cerrado y backlog priorizado
-- H2: API y base de datos funcionando
-- H3: importacion de ejercicios estable
-- H4: backoffice usable por contenido
-- H5: app cliente navegable y lista para beta
-- H6: despliegue estable en staging y produccion
+- H0: docs y entorno listos (14 ago 2026)
+- H1: API catalogo + import estables (11 sep 2026)
+- H2: backoffice usable por contenido (23 oct 2026)
+- H3: app cliente PWA navegable (20 nov 2026)
+- H4: rutinas y sesiones en MVP (11 dic 2026)
+- H5: beta cerrada lanzada (12 dic 2026)
+- H6: beta abierta lanzada (1 ene 2027)
 
 ### Criterios de exito
 
@@ -446,15 +451,13 @@ Entregables:
 
 Orden sugerido para empezar:
 
-1. Cerrar el PRD del MVP.
-2. Definir roles y permisos.
-3. Diseñar el modelo de datos en PostgreSQL.
-4. Construir el backend Laravel con autenticacion y catalogo.
-5. Importar el dataset completo.
-6. Levantar el backoffice.
-7. Construir la app cliente.
-8. Probar con usuarios reales.
-9. Ajustar y publicar antes de diciembre.
+1. Validar [`docs/getting-started.md`](docs/getting-started.md) en local.
+2. Seguir el sprint actual en [`docs/roadmap.md`](docs/roadmap.md) / [`docs/backlog.md`](docs/backlog.md).
+3. Endurecer auth, roles e import del catalogo.
+4. Levantar el backoffice.
+5. Construir la app cliente.
+6. Anadir rutinas y sesiones.
+7. Beta cerrada (dic 2026) y beta abierta (ene 2027) segun [`docs/beta-plan.md`](docs/beta-plan.md).
 
 ## 12. Decisiones que conviene tomar antes de desarrollar
 
@@ -469,7 +472,7 @@ Orden sugerido para empezar:
 
 ## 13. Conclusion
 
-Con `exercises-dataset` ya existe una base de contenido suficiente para acelerar mucho el arranque. El camino mas seguro para salir en diciembre de 2026 es construir un MVP con:
+Con `exercises-dataset` ya existe una base de contenido suficiente para acelerar mucho el arranque. El camino mas seguro para una sola persona hacia la beta abierta de enero de 2027 es construir un MVP con:
 
 - backend Laravel
 - PostgreSQL bien modelado
@@ -478,4 +481,4 @@ Con `exercises-dataset` ya existe una base de contenido suficiente para acelerar
 - importacion inicial automatizada
 - workflow editorial simple
 
-La clave del exito no es solo mostrar ejercicios, sino hacer que el equipo pueda operar el contenido y que el producto quede listo para crecer sin reescribir la base.
+La clave del exito no es solo mostrar ejercicios, sino poder operar el contenido y dejar el producto listo para crecer sin reescribir la base. Las fechas operativas viven en [`docs/roadmap.md`](docs/roadmap.md).
