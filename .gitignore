@@ -1,0 +1,44 @@
+# Configuración privada
+.env
+.env.*
+!.env.example
+!.env.staging.example
+!.env.production.example
+auth.json
+.npmrc.local
+
+# Dependencias y artefactos de compilación
+node_modules/
+vendor/
+/gym-rat-app/www/
+/gym-rat-app/dist/
+/gym-rat-app/.angular/cache/
+/gym-rat-app/android/.gradle/
+/gym-rat-app/android/local.properties
+/gym-rat-app/android/**/build/
+/gym-rat-app/ios/**/Pods/
+/gym-rat-app/ios/**/DerivedData/
+/gym-rat-web/public/build/
+/gym-rat-web/public/hot
+/gym-rat-web/public/storage
+/gym-rat-web/storage/logs/*.log
+/gym-rat-web/storage/*.key
+
+# Datos y configuración local de Docker
+/compose.override.yaml
+/compose.override.yml
+/.docker-data/
+
+# Llaves y firma móvil
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# Cachés locales y sistema operativo
+coverage/
+.phpunit.cache/
+.phpunit.result.cache
+.DS_Store
+Thumbs.db

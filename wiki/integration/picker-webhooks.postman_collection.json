@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "b7c9f1e2-1a2b-4c3d-9e0f-000000000001",
+		"name": "Sline · Picker Webhooks",
+		"description": "Colección para probar los webhooks entrantes de Picker Express contra Sline.\n\nEndpoint: POST {{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}\n\nVariables de colección:\n- base_url: host de Sline (ej. http://localhost o el túnel ngrok).\n- branch_id: id numérico de la sucursal (branch) en Sline.\n- booking_id: `id` interno del booking en Picker (campo `id` / `bookingID`).\n- booking_numeric_id: `bookingNumericId` devuelto por Create Booking. Sline hace match primero por este valor.\n- external_booking_id: `externalBookingID` = public_code del pedido en Sline (ej. JTCO4).\n- driver_name / driver_mobile / delivery_provider / validation_code: datos de prueba.\n\nOrden sugerido (ciclo exitoso):\n1. DRIVER_ASSIGNED (ACCEPTED) → pedido queda \"En espera de recolección\".\n2. UPDATE_BOOKING_STATUS ARRIVED_AT_PICKUP (sigue en espera de recolección).\n3. UPDATE_BOOKING_STATUS WAY_TO_DELIVER → \"En camino\".\n4. UPDATE_BOOKING_STATUS ARRIVED_AT_DELIVERY (sigue \"En camino\").\n5. UPDATE_BOOKING_STATUS COMPLETED → \"Entregado\".\n\nDoc oficial: https://app.theneo.io/pickerexpress/picker-api-suite/api-reference/webhooks/driver-assigned",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. DRIVER_ASSIGNED (ACCEPTED)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"DRIVER_ASSIGNED\",\n  \"driverName\": \"{{driver_name}}\",\n  \"driverImage\": {\n    \"original\": \"\",\n    \"thumbnail\": \"\"\n  },\n  \"driverEmail\": \"conductor@prueba.com\",\n  \"driverMobile\": \"{{driver_mobile}}\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\",\n  \"deliveryProvider\": \"{{delivery_provider}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Asigna conductor. El pedido pasa (o permanece) en `waiting_for_pickup` = \"En espera de recolección\" y se sincroniza el conductor por teléfono."
+			}
+		},
+		{
+			"name": "2. UPDATE_BOOKING_STATUS · ARRIVED_AT_PICKUP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"ARRIVED_AT_PICKUP\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Conductor llegó al local. El pedido sigue en \"En espera de recolección\"."
+			}
+		},
+		{
+			"name": "3. UPDATE_BOOKING_STATUS · WAY_TO_DELIVER",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"WAY_TO_DELIVER\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Conductor salió del local hacia el cliente. El pedido pasa a `on_the_way` = \"En camino\"."
+			}
+		},
+		{
+			"name": "4. UPDATE_BOOKING_STATUS · ARRIVED_AT_DELIVERY",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"ARRIVED_AT_DELIVERY\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\",\n  \"validationCode\": \"{{validation_code}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Conductor llegó con el cliente. Sigue en \"En camino\". Si el workspace tiene Prueba de Entrega, llega `validationCode`."
+			}
+		},
+		{
+			"name": "5. UPDATE_BOOKING_STATUS · COMPLETED",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"COMPLETED\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\",\n  \"validationCode\": \"{{validation_code}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Entrega satisfactoria. El pedido pasa a `delivered` = \"Entregado\"."
+			}
+		},
+		{
+			"name": "Alt · PROVIDER_NOT_FOUND",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"PROVIDER_NOT_FOUND\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "Ningún proveedor pudo atender. El shipment queda `cancelled` y el pedido vuelve a estar despachable en la sucursal."
+			}
+		},
+		{
+			"name": "Alt · CANCELLED_BY_DELIVERY_PROVIDER",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Content-Type", "value": "application/json" },
+					{ "key": "Accept", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"UPDATE_BOOKING_STATUS\",\n  \"statusText\": \"CANCELLED_BY_DELIVERY_PROVIDER\",\n  \"cancelReason\": \"BOOKING_TEST\",\n  \"bookingID\": \"{{booking_id}}\",\n  \"bookingNumericId\": {{booking_numeric_id}},\n  \"externalBookingID\": \"{{external_booking_id}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/integrations/picker/webhook/{{branch_id}}",
+					"host": [ "{{base_url}}" ],
+					"path": [ "api", "v1", "integrations", "picker", "webhook", "{{branch_id}}" ]
+				},
+				"description": "El proveedor canceló el pedido. Shipment `cancelled`; el pedido se cancela si la máquina de estados lo permite."
+			}
+		}
+	],
+	"variable": [
+		{ "key": "base_url", "value": "http://localhost" },
+		{ "key": "branch_id", "value": "1" },
+		{ "key": "booking_id", "value": "5e1f51e302a16510209a11be" },
+		{ "key": "booking_numeric_id", "value": "415191549" },
+		{ "key": "external_booking_id", "value": "JTCO4" },
+		{ "key": "driver_name", "value": "Conductor Prueba" },
+		{ "key": "driver_mobile", "value": "+593999999999" },
+		{ "key": "delivery_provider", "value": "UBER" },
+		{ "key": "validation_code", "value": "4321" }
+	]
+}
