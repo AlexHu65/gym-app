@@ -8,3 +8,7 @@ Aplica las [instrucciones del repositorio](../AGENTS.md). Esta carpeta contiene 
 - Configura la URL de API y los identificadores de tienda por ambiente. Guarda los secretos de backend y las llaves de firma fuera del cliente y del repositorio.
 - Fija las versiones de Ionic, Angular, Capacitor y sus herramientas de desarrollo durante GRT-008. Sigue la regla de pruebas del AGENTS.md raíz.
 - Usa la URL del backend correspondiente al ambiente. El Compose de esta carpeta instala las dependencias móviles. La compilación nativa de iOS se realiza con macOS y Xcode.
+
+## Skills de uso obligatorio cuando apliquen
+
+- Lee y aplica [conventional-commits-spanish-imperative](../gym-rat-web/.agents/skills/conventional-commits-spanish-imperative/SKILL.md) al redactar, revisar, validar o corregir mensajes de commit que incluyan cambios de la app móvil.
