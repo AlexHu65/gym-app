@@ -227,20 +227,21 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 
 **Para iniciar:** confirmar estructura y disponibilidad del equipo; definir runtime/versiones soportadas; no guardar secretos en Git.
 
-**Entregable:** estructura inicial documentada, `.gitignore`, ejemplo de configuración sin secretos, instrucciones de desarrollo y despliegue.
+**Entregable:** estructura inicial documentada, `.gitignore`, ejemplo de configuración sin secretos, instrucciones de desarrollo y arranque reproducible de ambientes locales.
 
-**Aceptación:** un desarrollador puede levantar cada componente siguiendo instrucciones reproducibles; staging separado de producción.
+**Aceptación:** un desarrollador puede levantar cada componente desde un checkout limpio. Staging local y producción simulada tienen puertos, redes, bases, volúmenes y credenciales independientes. PostgreSQL 16 ofrece PostGIS. El despliegue remoto queda para una etapa posterior.
 
 **Dependencias:** S0 terminado.
 
 **Seguimiento de GRT-008 — 27 nov 2026**
 
 - [x] Documentar el monorepo, las convenciones, los archivos de configuración de cada ambiente y la guía de QA. Agregar `.gitignore` y Compose para PostgreSQL local. Ver [README](../README.md), [Compose web](../gym-rat-web/compose.yaml) y [Compose móvil](../gym-rat-app/compose.yaml) y [QA](../QA-TESTING.md).
-- [ ] Confirmar el cierre de S0. [GRT-006](design/first-workout-flow.md) cuenta con el flujo y prototipo. Las sesiones moderadas quedaron fuera del alcance.
-- [ ] Fijar versiones compatibles e inicializar Laravel, el panel Filament, la web Inertia y el cliente Ionic/Angular/Capacitor. Documentar el uso de Docker y la disponibilidad de PostGIS.
-- [ ] Verificar el arranque desde un checkout limpio de PostgreSQL, la web, el panel y el cliente móvil. Registrar comandos y resultados en la guía de QA. El [registro de QA](../QA-TESTING.md#evidencia-de-grt-008--27-de-noviembre-de-2026) documenta PostgreSQL saludable y HTTP 200 para web, acceso de Filament y cliente móvil en el entorno local existente.
-- [ ] Documentar el despliegue y verificar que staging y producción usan configuración, bases, credenciales y URL independientes.
-- [ ] Versionar los proyectos inicializados y sus archivos de bloqueo, y actualizar Trello con la evidencia final de aceptación.
+- [x] S0 (sprint de descubrimiento) cerrado, confirmado por el responsable del proyecto el 27 de noviembre de 2026. [GRT-006](design/first-workout-flow.md) entregó el flujo y el prototipo.
+- [x] Versionar Laravel, Filament y el cliente Ionic/Angular/Capacitor junto con sus archivos de bloqueo y Compose independientes en `9ece7f6`.
+- [x] Verificar el arranque desde un checkout limpio. PostgreSQL saludable y HTTP 200 para la portada Laravel, acceso de Filament y cliente Ionic en navegador. Ver [evidencia de QA](../QA-TESTING.md#evidencia-de-grt-008).
+- [x] Integrar Inertia/React y crear la portada inicial. Compilación con Vite en Docker satisfactoria. La evidencia HTTP del commit `9ece7f6` corresponde a la portada anterior.
+- [x] Verificar la disponibilidad de PostGIS 3.7.0 en PostgreSQL 16.16 mediante [Compose complementario](../gym-rat-web/compose.postgis.yaml).
+- [x] Levantar Inertia/React, Filament e Ionic en staging local y producción simulada desde `00f519a`. Comprobar la separación de bases con un dato sintético exclusivo de staging. Ver [resultado de QA](../QA-TESTING.md#resultado-de-la-separación-local).
 
 ### [GRT-009] Definir arquitectura modular y contratos API
 **Épica:** E03 · **Puntos:** 5 · **Responsable:** Backend

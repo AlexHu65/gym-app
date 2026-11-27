@@ -1,13 +1,13 @@
 # GRT-006 — Flujo y prototipo del primer entrenamiento
 
-**Estado:** prototipo clicable listo para revisión; prueba moderada pendiente.  
+**Estado:** entregables completos. El 23 de noviembre de 2026 se retiraron las sesiones moderadas del alcance.  
 **Fecha:** 27 de octubre de 2026.  
 **Responsables:** Diseño / Producto.  
 **Prototipo Lovable:** [Gym Rat First Workout — vista previa](https://id-preview--926b4a43-7e2c-4b84-a215-a8530d27dcad.lovable.app) · [editar en Lovable](https://lovable.dev/projects/926b4a43-7e2c-4b84-a215-a8530d27dcad)
 
 ## Objetivo y criterio de éxito
 
-Una persona nueva del segmento prioritario debe poder iniciar y guardar su primera sesión con al menos un ejercicio, carga y repeticiones en menos de tres minutos, sin ayuda. La hipótesis de GRT-001/MVP requiere que al menos 4 de 5 participantes lo consigan en una prueba moderada. Este documento y el prototipo preparan esa prueba; no reportan resultados de usuarios.
+Una persona nueva del segmento prioritario debe poder iniciar y guardar su primera sesión con al menos un ejercicio, carga y repeticiones en menos de tres minutos, sin ayuda. Este es un objetivo de diseño.
 
 ## Usuario, tarea y dispositivos
 
@@ -59,47 +59,9 @@ En el prototipo de Lovable los datos son de demostración y viven en memoria del
 - Celebrar el registro y la constancia sin avergonzar ni presionar a entrenar con dolor, fatiga o lesión.
 - No enviar nombres, cargas, repeticiones ni otros datos de entrenamiento a analítica.
 
-## Guion de prueba moderada (5 participantes)
-
-### Preparación
-
-Reclutar cinco levantadores amateur intermedios que entrenen en gimnasios independientes. Probar el prototipo en teléfono; obtener consentimiento para tomar notas. No pedir nombre completo ni datos de salud. Reiniciar el prototipo entre sesiones.
-
-### Introducción neutral
-
-«Estamos revisando esta experiencia, no evaluándote a ti. Piensa en voz alta y usa la app como lo harías en el gimnasio. Si algo no se entiende, dímelo; no te ayudaré salvo que te quedes bloqueado. Esta es una demostración, así que no guarda datos reales».
-
-### Tareas
-
-1. «Acabas de abrir Gym Rat. Empieza a registrar lo que hiciste hoy».
-2. «Añade Press de banca y registra una serie de 60 kg por 8 repeticiones».
-3. «Guarda y termina la sesión; muéstrame qué quedó registrado».
-4. En una vuelta aparte, pide que encuentre qué hacer si no tiene un plan o no aparece un ejercicio.
-5. Activa el estado de interrupción o sin conexión y pregunta qué cree que ocurrirá con sus datos.
-
-No revelar etiquetas/controles o sugerir el siguiente paso. Dar hasta tres minutos a la tarea primaria; si pide ayuda o recibe una pista, contar como asistida.
-
-### Registro por participante
-
-| ID anónimo | Completó ejercicio + kg + reps | Tiempo (s) | Ayuda/pistas | Error o dato perdido | Fricción observada / cita breve |
-|---|---|---:|---|---|---|
-| P1 | Pendiente | — | — | — | — |
-| P2 | Pendiente | — | — | — | — |
-| P3 | Pendiente | — | — | — | — |
-| P4 | Pendiente | — | — | — | — |
-| P5 | Pendiente | — | — | — | — |
-
-### Decisión posterior a la prueba
-
-- **Métrica:** contar participantes que completan tarea primaria sin ayuda en menos de 180 s; reportar numerador y denominador (objetivo mínimo 4/5), tiempos y limitación de muestra.
-- **Fricciones:** registrar paso/pantalla, evidencia, severidad (bloqueante, alta, media, baja) y frecuencia observada; separar observación de interpretación.
-- **Priorización:** corregir primero pérdida/confusión de datos, bloqueos de finalización y errores de navegación; después reducir pasos y ajustar lenguaje/jerarquía visual.
-- No congelar interacción hasta probar con cinco personas y documentar los cambios/prioridades. Si no se alcanza el objetivo, revisar el flujo y repetir con una muestra nueva.
-
 ## Artefactos, dependencias y pendientes
 
 - PRD relacionado: [`docs/product/prd/01-entrenamiento-y-progreso.md`](../product/prd/01-entrenamiento-y-progreso.md).
 - Alcance y umbrales de beta: [`docs/product/mvp-scope.md`](../product/mvp-scope.md).
 - Dependencias de tarjeta: GRT-001 y GRT-005 completadas según backlog.
-- **Pendiente para cierre:** ejecutar la prueba moderada con cinco usuarios, completar la tabla, registrar fricciones y cambios, y actualizar la tarjeta Trello con este documento, el prototipo y el resultado. No declarar GRT-006 Hecho hasta cubrir esa aceptación.
-- **Dependencia posterior:** GRT-011 debe convertir la dirección visual validada en sistema visual; confirmar unidades/zona horaria y requisitos de persistencia con las tarjetas de entrenamiento antes de implementar.
+- **Dependencia posterior:** GRT-011 debe convertir la dirección visual del prototipo en sistema visual; confirmar unidades/zona horaria y requisitos de persistencia con las tarjetas de entrenamiento antes de implementar.

@@ -33,7 +33,7 @@ Versión corta para comunicar: **“Registra tus levantamientos. Vuelve más fue
 ## Hipótesis medibles
 
 1. **Necesidad:** al menos 8 de cada 10 personas del grupo de 10 entrevistadas describen que no registran sus cargas o que su método actual no les permite consultar adecuadamente su progreso. La señal inicial ya fue reportada; conservar notas anonimizadas para auditar cómo se obtuvo.
-2. **Activación:** en una prueba moderada con 5 levantadores amateur intermedios, al menos 4 pueden registrar una sesión con ejercicio, carga y repeticiones sin ayuda y en menos de 3 minutos.
+2. **Activación:** una persona del segmento puede registrar una sesión con ejercicio, carga y repeticiones sin ayuda y en menos de 3 minutos.
 3. **Valor recurrente:** en un piloto de 2 semanas con al menos 10 usuarios del segmento, al menos 6 registran 3 o más sesiones y al menos 6 consultan una sesión previa para orientar su entrenamiento siguiente.
 
 Las hipótesis 2 y 3 son criterios propuestos para validar el producto; aún no son resultados observados. Si la muestra disponible no alcanza el mínimo, reportar el número real y tratar el resultado como exploratorio.

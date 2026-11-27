@@ -10,6 +10,11 @@ Aplica las [instrucciones del repositorio](../AGENTS.md). Esta carpeta agrupa el
 - Centraliza validación, autorización y lógica de negocio en Laravel. Verifica las transacciones de las tiendas en el backend antes de actualizar el derecho de acceso. Protege el módulo financiero con permisos explícitos.
 - Usa PostgreSQL 16. Incorpora PostGIS cuando un requisito aprobado necesite la extensión.
 
+## Skills de uso obligatorio cuando apliquen
+
+- Lee y aplica [conventional-commits-spanish-imperative](.agents/skills/conventional-commits-spanish-imperative/SKILL.md) al redactar, revisar, validar o corregir mensajes de commit que incluyan cambios de la web.
+- Lee y aplica [detectar-optimizacion-filament](.agents/skills/detectar-optimizacion-filament/SKILL.md) al implementar o revisar la carga de datos en Filament, incluidas las consultas, los listados, los filtros, las opciones de formularios y las revisiones de rendimiento de lectura.
+
 ## Desarrollo
 
 - Consulta los manifiestos y archivos de bloqueo cuando existan. Durante GRT-008 fija la matriz compatible de PHP, Laravel y dependencias frontend antes de documentar los comandos de arranque.

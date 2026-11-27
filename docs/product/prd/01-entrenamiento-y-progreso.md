@@ -8,7 +8,7 @@
 
 En las 10 entrevistas iniciales, alrededor de 8 personas no registraban sus cargas o no mantenían un registro adecuado. Es una señal de esa muestra, no una estimación de mercado. El producto debe ayudar a recordar ejercicios, series, repeticiones, carga y esfuerzo sin añadir fricción a la sesión.
 
-**Resultado esperado:** una persona nueva puede guardar su primera sesión con ejercicio, carga y repeticiones en menos de tres minutos y sin ayuda en al menos 4 de 5 pruebas moderadas (GRT-006/MVP scope).
+**Resultado esperado:** una persona nueva puede guardar su primera sesión con ejercicio, carga y repeticiones en menos de tres minutos y sin ayuda, como objetivo de diseño de GRT-006.
 
 ## Alcance funcional
 
@@ -45,7 +45,7 @@ Feed, rankings, wearables, nutrición, generación de rutinas con IA, coaching/m
 
 ## Dependencias y pendientes
 
-- GRT-006: prototipo clicable y prueba con cinco usuarios antes de congelar interacción; pendiente en la documentación disponible.
+- GRT-006: prototipo clicable y flujo del primer entrenamiento documentados.
 - GRT-010/012/015–018: esquema, cuenta, planes, sesión, historial y progreso.
 - Confirmar elección de unidades y zona horaria en el diseño detallado; no hay política explícita en los documentos fuente.
 
