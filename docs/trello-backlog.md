@@ -199,7 +199,7 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 
 **Entregable:** prototipo clicable y flujo `docs/design/first-workout-flow.md`.
 
-**Aceptación:** 5 usuarios de prueba pueden explicar cómo empezar y completar una sesión; se anotan fricciones y cambios priorizados.
+**Aceptación:** el prototipo clicable y el flujo documentado cubren el primer entrenamiento y los estados alternos definidos. Entregables completos. Las sesiones moderadas se retiraron del alcance el 23 de noviembre de 2026.
 
 **Dependencias:** GRT-001, GRT-005.
 
@@ -210,7 +210,7 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 
 **Para iniciar:** seleccionar 5–8 insignias de constancia/progreso; definir cálculo con sesiones completadas y datos que ya recoge el MVP.
 
-**Entregable:** catálogo aprobado en [`docs/product/badges-challenges.md`](product/badges-challenges.md) con nombre, regla, límites, copy y ejemplos. Definición aprobada el 5 nov 2026; validación de comprensión/copy visual corresponde a GRT-006.
+**Entregable:** catálogo aprobado en [`docs/product/badges-challenges.md`](product/badges-challenges.md) con nombre, regla, límites, copy y ejemplos. Definición aprobada el 5 nov 2026; el flujo y copy visual se documentan en GRT-006.
 
 **Aceptación:** cumplida en el catálogo enlazado: cada regla tiene ejemplos de entrada/salida, usa datos del MVP y no depende de likes; se documentan periodo, zona horaria, sincronización tardía, correcciones, eliminación, idempotencia, RPE y copy seguro.
 
@@ -232,6 +232,15 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 **Aceptación:** un desarrollador puede levantar cada componente siguiendo instrucciones reproducibles; staging separado de producción.
 
 **Dependencias:** S0 terminado.
+
+**Seguimiento de GRT-008 — 27 nov 2026**
+
+- [x] Documentar el monorepo, las convenciones, los archivos de configuración de cada ambiente y la guía de QA. Agregar `.gitignore` y Compose para PostgreSQL local. Ver [README](../README.md), [Compose web](../gym-rat-web/compose.yaml) y [Compose móvil](../gym-rat-app/compose.yaml) y [QA](../QA-TESTING.md).
+- [ ] Confirmar el cierre de S0. [GRT-006](design/first-workout-flow.md) cuenta con el flujo y prototipo. Las sesiones moderadas quedaron fuera del alcance.
+- [ ] Fijar versiones compatibles e inicializar Laravel, el panel Filament, la web Inertia y el cliente Ionic/Angular/Capacitor. Documentar el uso de Docker y la disponibilidad de PostGIS.
+- [ ] Verificar el arranque desde un checkout limpio de PostgreSQL, la web, el panel y el cliente móvil. Registrar comandos y resultados en la guía de QA. El [registro de QA](../QA-TESTING.md#evidencia-de-grt-008--27-de-noviembre-de-2026) documenta PostgreSQL saludable y HTTP 200 para web, acceso de Filament y cliente móvil en el entorno local existente.
+- [ ] Documentar el despliegue y verificar que staging y producción usan configuración, bases, credenciales y URL independientes.
+- [ ] Versionar los proyectos inicializados y sus archivos de bloqueo, y actualizar Trello con la evidencia final de aceptación.
 
 ### [GRT-009] Definir arquitectura modular y contratos API
 **Épica:** E03 · **Puntos:** 5 · **Responsable:** Backend
