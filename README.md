@@ -8,7 +8,7 @@ Gym Rat es un diario de entrenamiento para registrar sesiones y series, planific
 | Panel multitenant | `gym-rat-web/` | Filament v5 sobre Laravel para administrar usuarios, permisos, catálogo, operaciones y finanzas según el alcance autorizado. |
 | Sitio público | `gym-rat-web/` | Laravel, Inertia, React y Tailwind para presentar Gym Rat, captar interesados y dirigirlos a la app para completar la compra. |
 
-Laravel sirve la API móvil y comparte servicios y políticas con el sitio y el panel. El backend se organiza como monolito modular y usa PostgreSQL 16. PostGIS queda disponible para requisitos aprobados. Las vistas administrativas PWA con Inertia se reservan para flujos específicos que complementen el panel.
+Laravel sirve la API móvil y comparte servicios y políticas con el sitio y el panel. El backend se organiza como monolito modular y usa PostgreSQL 16. La disponibilidad de PostGIS queda pendiente. Las vistas administrativas PWA con Inertia se reservan para flujos específicos que complementen el panel.
 
 El acceso digital se desbloquea con un pago único no consumible mediante Apple In-App Purchase o Google Play Billing. Laravel verifica la transacción de forma idempotente y registra el derecho de acceso permanente. El sitio público carece de checkout y de procesador de pagos.
 
@@ -34,47 +34,52 @@ Cada carpeta tiene su propio `.env` local, excluido de Git, y tres plantillas ve
 | Staging | `.env.staging.example` | Usa los valores de staging en la configuración del despliegue Laravel y de la compilación móvil. |
 | Producción | `.env.production.example` | Usa los valores de producción en la configuración del despliegue Laravel y de la compilación móvil. |
 
-Al desplegar Laravel, inyecta las variables del ambiente o aprovisiona un `.env` privado en el servidor. Configura una base de datos y credenciales propias por ambiente, conserva una `APP_KEY` distinta por ambiente y sustituye las URL de ejemplo. Cuando Laravel esté inicializado, genera la clave local con `php artisan key:generate` desde `gym-rat-web/` y completa los datos de tu PostgreSQL local.
+Al desplegar Laravel, inyecta las variables del ambiente o aprovisiona un `.env` privado en el servidor. Configura una base de datos y credenciales propias por ambiente, conserva una `APP_KEY` distinta por ambiente y sustituye las URL de ejemplo. Genera la clave local con el comando de arranque indicado abajo.
 
-Para la app móvil, `API_BASE_URL` apunta a la API de ese ambiente y los identificadores de Apple y Google se completan al configurar las tiendas. En un dispositivo físico, usa una dirección del backend local accesible desde el dispositivo en lugar de `localhost`. La lectura de estas variables durante la compilación queda pendiente de integrar al inicializar Angular y Capacitor.
+Para la app móvil, `API_BASE_URL` apunta a la API de ese ambiente y los identificadores de Apple y Google se completan al configurar las tiendas. En un dispositivo físico, usa una dirección del backend local accesible desde el dispositivo en lugar de `localhost`. La integración de estas variables en la compilación móvil queda pendiente.
 
 ## Docker Compose por proyecto
 
-Cada proyecto tiene su propio `Dockerfile` y `compose.yaml`. Ejecuta los comandos dentro de la carpeta correspondiente. Para instalar dependencias, primero inicializa el proyecto y versiona sus manifiestos y archivos de bloqueo.
+Cada proyecto tiene su propio `Dockerfile` y `compose.yaml`. Los manifiestos y archivos de bloqueo están en Git. Para un entorno aislado con puertos alternativos, sigue la [guía de QA](QA-TESTING.md#arranque-en-un-checkout-limpio).
 
 ### Web y PostgreSQL
 
-Completa `DB_PASSWORD` en `gym-rat-web/.env`. Desde `gym-rat-web/`, ejecuta:
+Desde `gym-rat-web/`, crea `.env` si hace falta y completa `DB_PASSWORD` con una contraseña local antes del primer comando de Compose.
 
 ```sh
-GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)" docker compose up --build -d
-docker compose logs dependencies
+test -f .env || cp .env.example .env
 ```
 
-El servicio `dependencies` ejecuta `composer install` y `npm ci`. PostgreSQL 16 conserva los datos en un volumen y escucha en `127.0.0.1` en el puerto `DB_PORT`. Puedes iniciar solo la base con `docker compose up -d --wait postgres` y detenerla con `docker compose stop postgres`. Cambiar las variables `DB_*` después de inicializar el volumen requiere actualizar las credenciales en PostgreSQL.
-
-Para servir Laravel dentro de Compose desde `gym-rat-web/`, usa el siguiente comando. `--no-reload` conserva las variables de conexión que Compose pasa al servidor PHP.
-
 ```sh
+export GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)"
+docker compose up -d --wait postgres
+docker compose run --build --rm --no-deps dependencies
+docker compose run --rm --no-deps dependencies npm run build
+docker compose run --rm --no-deps dependencies php artisan key:generate --no-interaction
+docker compose run --rm --no-deps dependencies php artisan migrate --no-interaction
 docker compose run --rm --no-deps -p 127.0.0.1:8000:8000 dependencies \
   php artisan serve --host=0.0.0.0 --port=8000 --no-reload
 ```
 
+Genera `APP_KEY` una vez por ambiente. La web queda en `http://127.0.0.1:8000/` y el acceso de Filament en `/admin/login`. Dentro de Compose, Laravel se conecta a `postgres:5432`. Conserva `--no-reload` para que el servidor PHP reciba esa configuración. PostgreSQL guarda los datos en un volumen y puedes detenerlo con `docker compose stop postgres`.
+
 ### App móvil
 
-Desde `gym-rat-app/`, ejecuta:
+Desde `gym-rat-app/`, instala las dependencias desde el lockfile y arranca Angular.
 
 ```sh
-GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)" docker compose up --build
+test -f .env || cp .env.example .env
+export GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)"
+docker compose run --build --rm --no-deps dependencies
+docker compose run --rm --no-deps -p 127.0.0.1:8100:8100 dependencies \
+  npx ng serve --host 0.0.0.0 --port 8100
 ```
 
-El servicio `dependencies` ejecuta `npm ci` para la app. Las compilaciones nativas de iOS requieren macOS y Xcode.
-
-Los servicios de instalación terminan al completar su trabajo. Las imágenes usan PHP 8.4, Composer 2 y Node 24 como base provisional. Staging y producción tendrán configuración, credenciales, redes y almacenamiento propios. El arranque de Laravel y del servidor de desarrollo móvil queda pendiente de la inicialización de ambos proyectos.
+Abre `http://127.0.0.1:8100/` para ver el cliente en navegador. Las compilaciones nativas de iOS requieren macOS y Xcode.
 
 ## Estado de GRT-008
 
-La estructura inicial, las convenciones, las plantillas de ambiente y el Compose de PostgreSQL local están documentadas. Las carpetas todavía carecen de aplicaciones ejecutables. Queda pendiente fijar las versiones compatibles en los manifiestos, inicializar los proyectos, documentar el arranque y despliegue reproducibles y comprobar la separación de staging y producción.
+El arranque de PostgreSQL, Laravel, el acceso de Filament y el cliente Ionic se verificó desde un checkout limpio de `9ece7f6`. S0 está cerrado. La portada pública ahora usa Inertia, React y Tailwind. Quedan pendientes PostGIS y las instrucciones y verificación del despliegue separado de staging y producción. Consulta el [registro de QA](QA-TESTING.md#evidencia-de-grt-008).
 
 - [Instrucciones del repositorio](AGENTS.md)
 - [Instrucciones de la app móvil](gym-rat-app/AGENTS.md)

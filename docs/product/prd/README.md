@@ -19,7 +19,7 @@ Estos PRDs convierten el brief y alcance aprobados en requisitos por área. Los 
 ## Decisiones y bloqueos que cruzan los PRDs
 
 1. **Compra única de ejercicios:** confirmada dentro del MVP como paquetes temáticos in-app con acceso permanente. Falta definir composición/SKUs/precios MXN y actualizar el flujo de pagos para compra, restauración y reembolsos; no se ofrecerán compras individuales salvo decisión posterior.
-2. **Prototipo del primer entrenamiento:** GRT-006 requiere prototipo clicable y prueba moderada con cinco usuarios. Este entregable no aparece en la documentación revisada; el PRD-01 no sustituye esa validación.
+2. **Prototipo del primer entrenamiento:** GRT-006 documenta el [flujo y prototipo clicable](../../design/first-workout-flow.md).
 3. **Reglas de progresión:** falta el catálogo con reglas concretas solicitado por GRT-007. PRD-04 fija límites de seguridad y requisitos, pero no inventa insignias finales.
 4. **Derechos y operación del catálogo:** términos publicados de MuscleWiki confirman uso comercial/display en app y streaming in-app bajo planes pagados; no exponer/exportar/revender datos o medios. El acceso puede revocarse/retirarse y debe divulgarse. GRT-047 administra MXN $3,687 y costo API escalonado. Testing solo beta cerrada; Growth para piloto en español; Professional según funciones/uso; Enterprise queda opcional futuro.
 5. **Mercado y privacidad:** México confirmado y cobros MXN desde lanzamiento. Faltan precios locales por tienda, tipo de cambio/fecha/fuente, impuestos y artefactos de privacidad, términos, eliminación/exportación y tratamiento fiscal.

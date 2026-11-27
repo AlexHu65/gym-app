@@ -4,36 +4,44 @@
 
 | Ambiente | Preparación | Alcance |
 | --- | --- | --- |
-| Local | `.env` privado por componente y PostgreSQL 16 en Docker Compose. | Verificación de configuración y, cuando las aplicaciones estén inicializadas, validación de flujos con datos sintéticos. |
+| Local | `.env` privado por componente y PostgreSQL 16 en Docker Compose. | Verificación de configuración y, validación de flujos con datos sintéticos. |
 | Staging | API, sitio y panel desplegados con base de datos y credenciales propias. Compilaciones móviles apuntando a esa API. | Flujos de extremo a extremo con datos sintéticos, Apple Sandbox y cuentas de prueba de Google Play. |
 | Producción | URL, base de datos y credenciales exclusivas de producción. | Comprobaciones de disponibilidad y navegación pública tras el despliegue. |
 
 Las URL y cuentas de prueba de staging se registrarán al aprovisionar el ambiente. Prepara cuentas sintéticas de usuario Free, comprador de prueba y administradores con permisos diferenciados. Para revisar aislamiento, prepara dos tenants con datos distinguibles cuando se defina el modelo multitenant. Gestiona los accesos fuera del repositorio.
 
-## Verificación local de GRT-008
+## Arranque en un checkout limpio
 
-1. Confirma que Git ignora los archivos privados `gym-rat-web/.env` y `gym-rat-app/.env`, y permite versionar las plantillas `.env.example`, `.env.staging.example` y `.env.production.example` de ambos componentes.
-2. Configura `DB_PASSWORD` en `gym-rat-web/.env` y arranca PostgreSQL desde `gym-rat-web/`. El servicio debe quedar saludable.
-3. Reinicia el servicio y confirma que el volumen conserva los datos. Consulta las instrucciones de [arranque y detención](README.md#web-y-postgresql).
-4. Cuando se aprovisionen los despliegues, confirma que la compilación de staging apunta a su propia API y que sus operaciones quedan en la base de staging. Comprueba que staging y producción tienen depuración desactivada y usan configuración y credenciales separadas.
+Clona la rama de GRT-008 en un directorio nuevo y registra el SHA. Usa los comandos del [README](README.md#docker-compose-por-proyecto) desde las carpetas del clon, con estos ajustes para mantener QA local aislado del entorno habitual.
 
-```sh
-docker compose up -d --wait postgres
-docker compose ps postgres
-```
-
-## Evidencia de GRT-008 — 27 de noviembre de 2026
-
-| Verificación | Comando o consulta | Resultado |
+| Componente | Proyecto Compose | Puerto local |
 | --- | --- | --- |
-| PostgreSQL local | `docker compose ps` desde `gym-rat-web/` | PostgreSQL 16 saludable, publicado en `127.0.0.1:5432`. |
-| Migraciones Laravel | `php artisan migrate:status` dentro del contenedor web | Las tres migraciones iniciales figuran como aplicadas. |
-| Sitio web | `curl` a `http://127.0.0.1:8000/` | HTTP 200. |
-| Pantalla de acceso de Filament | `curl` a `http://127.0.0.1:8000/admin/login` | HTTP 200. |
-| Cliente móvil en navegador | `curl` a `http://127.0.0.1:8100/` | HTTP 200. |
-| Exclusión de configuración privada | `git check-ignore gym-rat-web/.env gym-rat-app/.env` | Ambos archivos ignorados por Git. |
+| PostgreSQL | `grt008-qa-web` | `15432` |
+| Laravel y acceso de Filament | `grt008-qa-web` | `18000` |
+| Cliente Ionic en navegador | `grt008-qa-app` | `18100` |
 
-Los manifiestos y archivos de bloqueo existen en el directorio de trabajo. Queda pendiente versionarlos, repetir el arranque desde un checkout limpio, documentar la disponibilidad de PostGIS y verificar la separación de staging y producción en los destinos de despliegue. La evidencia HTTP cubre el arranque local y la pantalla de acceso del panel.
+- Copia las plantillas locales y completa `DB_PASSWORD` en el `.env` web del clon antes de ejecutar Compose. Usa `export DB_PORT=15432` en la terminal web. Añade `-p grt008-qa-web` o `-p grt008-qa-app` después de `docker compose` según el componente.
+- En `docker compose run`, publica `127.0.0.1:18000:8000` para Laravel y `127.0.0.1:18100:8100` para Angular. Conserva los puertos internos indicados en el README.
+- Si el puerto ya está ocupado, identifica la instancia con `docker ps --filter publish=18000` o `docker ps --filter publish=18100`. Reutiliza la instancia si corresponde al mismo checkout de QA.
+- Desde la raíz del clon, confirma con `git check-ignore gym-rat-web/.env gym-rat-app/.env` que ambos archivos privados están excluidos.
+
+## Evidencia de GRT-008
+
+El 27 de noviembre de 2026 se verificó el checkout limpio del commit `9ece7f6`.
+
+| Verificación | Resultado |
+| --- | --- |
+| PostgreSQL 16 | Contenedor saludable en `127.0.0.1:15432`. |
+| Dependencias y base web | Composer y npm instalaron desde sus archivos de bloqueo. Vite compiló, se generó `APP_KEY` y se aplicaron las tres migraciones iniciales. |
+| Portada Laravel | `http://127.0.0.1:18000/` devolvió HTTP 200. La ruta sirve la vista Blade inicial. |
+| Acceso de Filament | `http://127.0.0.1:18000/admin/login` devolvió HTTP 200. |
+| Cliente Ionic en navegador | `http://127.0.0.1:18100/` devolvió HTTP 200. El contenedor monta la app del checkout limpio. |
+| Archivos privados | Git ignora ambos `.env` locales. |
+| PostGIS | `pg_available_extensions` confirmó que la extensión falta en la imagen local de PostgreSQL. |
+
+### Separación de staging y producción
+
+QA local usa contenedores y puertos aislados. El criterio de despliegue queda pendiente hasta comprobar en los destinos reales las URL y bases independientes, las credenciales propias, `APP_DEBUG=false` y la URL de API usada por la compilación móvil de staging. Registra el entorno y la evidencia sin incluir valores secretos.
 
 ## Flujos de aceptación del MVP
 
@@ -50,7 +58,7 @@ Ejecuta cada escenario cuando su funcionalidad esté disponible. Registra por se
 | Panel multitenant | Entrar a `/admin` con cuentas autorizadas y sin permiso. Intentar consultar, modificar o exportar registros de otro tenant. | El servidor limita cada operación al rol y tenant autorizados. El módulo financiero y los recursos globales requieren permisos explícitos. |
 | Sitio público | Consultar la oferta, enviar datos sintéticos en el formulario y seguir la llamada a descargar o abrir la app. | El formulario valida entradas y confirma el envío. El sitio dirige la compra a la app. |
 
-Los escenarios funcionales quedan pendientes hasta que se inicialicen y desplieguen los componentes correspondientes. Para el detalle de criterios y dependencias, consulta el [backlog](docs/trello-backlog.md) y las decisiones de [compra única](docs/decisions/ADR-003-one-time-full-unlock.md) y [administración multitenant](docs/decisions/ADR-006-admin-multitenant.md).
+Los escenarios funcionales quedan pendientes hasta que se implementen los flujos correspondientes. Para el detalle de criterios y dependencias, consulta el [backlog](docs/trello-backlog.md) y las decisiones de [compra única](docs/decisions/ADR-003-one-time-full-unlock.md) y [administración multitenant](docs/decisions/ADR-006-admin-multitenant.md).
 
 ## Reporte de incidencias
 

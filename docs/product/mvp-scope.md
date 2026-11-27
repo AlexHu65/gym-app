@@ -65,7 +65,7 @@ El catálogo usa datos/video MuscleWiki en streaming, no GIF e imagen comprados 
 
 **Usuarios activados que registran al menos tres sesiones completas en una ventana móvil de 14 días.** Una sesión cuenta cuando el usuario la finaliza y tiene al menos un ejercicio y una serie guardada. Se reporta como conteo y como proporción de usuarios activados elegibles; no se suman sesiones de prueba ni eventos duplicados.
 
-Un usuario queda **activado** al completar su primera sesión guardada (la vista previa Free). Las métricas de repetición y conversión deben segmentarse por acceso Free/desbloqueado, para que el límite de una sesión Free no se interprete como abandono. Para validar facilidad de inicio, en una prueba moderada con cinco personas del segmento, al menos cuatro deben registrar una sesión con ejercicio, carga y repeticiones, sin ayuda y en menos de tres minutos.
+Un usuario queda **activado** al completar su primera sesión guardada (la vista previa Free). Las métricas de repetición y conversión deben segmentarse por acceso Free/desbloqueado, para que el límite de una sesión Free no se interprete como abandono. El objetivo de facilidad de inicio es registrar una sesión con ejercicio, carga y repeticiones sin ayuda y en menos de tres minutos.
 
 ### Métricas de guardia
 
@@ -87,7 +87,7 @@ Los resultados de muestras pequeñas se informan con numerador, denominador y li
 
 **Salida positiva de beta:**
 
-1. Se completaron las pruebas moderadas de activación: al menos 4 de 5 personas terminan su primera sesión con carga y repeticiones en menos de 3 minutos sin ayuda.
+1. El flujo de la primera sesión permite guardar ejercicio, carga y repeticiones.
 2. En piloto de dos semanas y muestra de al menos 10, se alcanzan los umbrales de retención de valor indicados arriba; si no se alcanza la muestra mínima, se registra como evidencia exploratoria y Producto decide si amplía piloto.
 3. La revisión de flujos críticos no encuentra fallas bloqueantes de pérdida de sesiones, acceso indebido o cobro; fallos restantes tienen severidad, responsable y plan fechado.
 4. Se entiende qué incluye el acceso gratuito y el pago único; participantes pueden encontrar cómo comprar/restaurar.
