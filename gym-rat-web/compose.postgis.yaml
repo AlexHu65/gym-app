@@ -1,0 +1,4 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.7
+    platform: linux/amd64

@@ -5,10 +5,10 @@
 | Ambiente | Preparación | Alcance |
 | --- | --- | --- |
 | Local | `.env` privado por componente y PostgreSQL 16 en Docker Compose. | Verificación de configuración y, validación de flujos con datos sintéticos. |
-| Staging | API, sitio y panel desplegados con base de datos y credenciales propias. Compilaciones móviles apuntando a esa API. | Flujos de extremo a extremo con datos sintéticos, Apple Sandbox y cuentas de prueba de Google Play. |
-| Producción | URL, base de datos y credenciales exclusivas de producción. | Comprobaciones de disponibilidad y navegación pública tras el despliegue. |
+| Staging local | Checkout y proyectos Compose propios. | Verificar la base web, el panel y el cliente móvil con datos sintéticos. |
+| Producción simulada | Checkout, proyectos Compose y credenciales independientes de staging. | Verificar la configuración de producción en loopback con datos sintéticos. |
 
-Las URL y cuentas de prueba de staging se registrarán al aprovisionar el ambiente. Prepara cuentas sintéticas de usuario Free, comprador de prueba y administradores con permisos diferenciados. Para revisar aislamiento, prepara dos tenants con datos distinguibles cuando se defina el modelo multitenant. Gestiona los accesos fuera del repositorio.
+Prepara cuentas sintéticas de usuario Free, comprador de prueba y administradores con permisos diferenciados. Para revisar aislamiento, prepara dos tenants con datos distinguibles cuando se defina el modelo multitenant. Gestiona los accesos fuera del repositorio.
 
 ## Arranque en un checkout limpio
 
@@ -39,9 +39,71 @@ El 27 de noviembre de 2026 se verificó el checkout limpio del commit `9ece7f6`.
 | Archivos privados | Git ignora ambos `.env` locales. |
 | PostGIS | `pg_available_extensions` confirmó que la extensión falta en la imagen local de PostgreSQL. |
 
-### Separación de staging y producción
+### Staging local y producción simulada
 
-QA local usa contenedores y puertos aislados. El criterio de despliegue queda pendiente hasta comprobar en los destinos reales las URL y bases independientes, las credenciales propias, `APP_DEBUG=false` y la URL de API usada por la compilación móvil de staging. Registra el entorno y la evidencia sin incluir valores secretos.
+Clona el repositorio dos veces y usa el mismo commit en ambos clones. En cada componente copia `.env.staging.example` o `.env.production.example` a `.env` según el clon. Usa estos valores y genera por separado cada `DB_PASSWORD` con `openssl rand -hex 24`.
+
+| Configuración | Staging local | Producción simulada |
+| --- | --- | --- |
+| `APP_ENV` | `staging` | `production` |
+| `APP_URL` | `http://127.0.0.1:18200` | `http://127.0.0.1:18300` |
+| `DB_PORT` | `15434` | `15435` |
+| `DB_DATABASE` y `DB_USERNAME` | `gym_rat_staging` | `gym_rat_production` |
+| Proyecto Compose web | `grt008-staging` | `grt008-production` |
+| Proyecto Compose móvil | `grt008-staging-app` | `grt008-production-app` |
+| Puerto Ionic | `18210` | `18310` |
+| `API_BASE_URL` del .env móvil | `http://127.0.0.1:18200/api` | `http://127.0.0.1:18300/api` |
+
+En ambos `.env` web usa `APP_DEBUG=false`, `DB_HOST=postgres` y `SESSION_SECURE_COOKIE=false` para HTTP en loopback. Mantén `APP_KEY` vacía al crear cada clon. Si usas HTTPS en un despliegue futuro, conserva las cookies seguras de las plantillas.
+
+Desde `gym-rat-web/` del clon de staging, ejecuta el siguiente bloque. Repite en el clon de producción con `GYM_PROJECT=grt008-production` y `GYM_WEB_PORT=18300`. Genera la clave y migra solo contra la base sintética del clon.
+
+```sh
+export GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)"
+GYM_PROJECT=grt008-staging
+GYM_WEB_PORT=18200
+gym_web() {
+  docker compose -f compose.yaml -f compose.postgis.yaml -p "$GYM_PROJECT" "$@"
+}
+
+gym_web up -d --wait postgres &&
+gym_web run --build --rm --no-deps dependencies &&
+gym_web run --rm --no-deps dependencies npm run build &&
+gym_web run --rm --no-deps dependencies php artisan key:generate --force --no-interaction &&
+gym_web run --rm --no-deps dependencies php artisan migrate --force --no-interaction &&
+gym_web run -d --rm --no-deps -p "127.0.0.1:$GYM_WEB_PORT:8000" dependencies \
+  php artisan serve --host=0.0.0.0 --port=8000 --no-reload
+```
+
+Usa un volumen nuevo para la imagen PostGIS. La configuración complementaria selecciona la imagen AMD64, que Docker Desktop emula en Apple Silicon. En cada clon móvil repite los comandos de [arranque del cliente](README.md#app-móvil), añade `-p grt008-staging-app` o `-p grt008-production-app` a Compose y publica `18210:8100` o `18310:8100` en loopback.
+
+Consulta la base de cada proyecto desde su clon web:
+
+```sh
+gym_web exec -T postgres sh -ec \
+  'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At' <<'SQL'
+SELECT current_database(), current_user, current_setting('server_version');
+SELECT name, default_version, installed_version
+FROM pg_available_extensions WHERE name = 'postgis';
+SQL
+```
+
+### Resultado de la separación local
+
+El 27 de noviembre de 2026 se ejecutó el procedimiento con dos checkouts de `00f519a` y [el Compose complementario de PostGIS](gym-rat-web/compose.postgis.yaml). En ambos se instalaron dependencias, se compiló la web y se aplicaron las tres migraciones iniciales.
+
+| Verificación | Staging local | Producción simulada |
+| --- | --- | --- |
+| Portada Laravel | HTTP 200; componente Inertia `Home` | HTTP 200; componente Inertia `Home` |
+| `/admin/login` | HTTP 200 | HTTP 200 |
+| Ionic en navegador | HTTP 200 en 18210 | HTTP 200 en 18310 |
+| PostgreSQL / PostGIS | 16.16 / 3.7.0 | 16.16 / 3.7.0 |
+| Usuario y base | `gym_rat_staging` | `gym_rat_production` |
+| Volumen | `grt008-staging_postgres_data` | `grt008-production_postgres_data` |
+| Red web | `grt008-staging_default` | `grt008-production_default` |
+| Marcador sintético | `grt008_qa_marker` contiene `staging-only` | `to_regclass('public.grt008_qa_marker') IS NULL` devolvió verdadero |
+
+La app móvil se comprobó en navegador. Angular aún debe consumir `API_BASE_URL` cuando se conecte a la API. El despliegue en servidores y las pruebas nativas corresponden a etapas posteriores.
 
 ## Flujos de aceptación del MVP
 

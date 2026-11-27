@@ -8,7 +8,7 @@ Gym Rat es un diario de entrenamiento para registrar sesiones y series, planific
 | Panel multitenant | `gym-rat-web/` | Filament v5 sobre Laravel para administrar usuarios, permisos, catálogo, operaciones y finanzas según el alcance autorizado. |
 | Sitio público | `gym-rat-web/` | Laravel, Inertia, React y Tailwind para presentar Gym Rat, captar interesados y dirigirlos a la app para completar la compra. |
 
-Laravel sirve la API móvil y comparte servicios y políticas con el sitio y el panel. El backend se organiza como monolito modular y usa PostgreSQL 16. La disponibilidad de PostGIS queda pendiente. Las vistas administrativas PWA con Inertia se reservan para flujos específicos que complementen el panel.
+Laravel sirve la API móvil y comparte servicios y políticas con el sitio y el panel. El backend se organiza como monolito modular y usa PostgreSQL 16. PostGIS 3.7 está disponible en PostgreSQL 16 mediante `gym-rat-web/compose.postgis.yaml`. Las vistas administrativas PWA con Inertia se reservan para flujos específicos que complementen el panel.
 
 El acceso digital se desbloquea con un pago único no consumible mediante Apple In-App Purchase o Google Play Billing. Laravel verifica la transacción de forma idempotente y registra el derecho de acceso permanente. El sitio público carece de checkout y de procesador de pagos.
 
@@ -21,8 +21,8 @@ El acceso digital se desbloquea con un pago único no consumible mediante Apple 
 | Ambiente | Uso |
 | --- | --- |
 | Local | Desarrollo con base de datos local, datos sintéticos y configuración individual. |
-| Staging | Validación integrada con servicios, base de datos y credenciales propios. Usar datos sintéticos y entornos de prueba de las tiendas. |
-| Producción | Servicio público con infraestructura, datos, credenciales y configuración de tiendas independientes de staging. |
+| Staging local | Validación integrada en un proyecto Compose con base, puertos y credenciales propios. |
+| Producción simulada | Configuración de producción validada en loopback, con base, puertos y credenciales propios. |
 
 ## Archivos de configuración
 
@@ -79,7 +79,7 @@ Abre `http://127.0.0.1:8100/` para ver el cliente en navegador. Las compilacione
 
 ## Estado de GRT-008
 
-El arranque de PostgreSQL, Laravel, el acceso de Filament y el cliente Ionic se verificó desde un checkout limpio de `9ece7f6`. S0 está cerrado. La portada pública ahora usa Inertia, React y Tailwind. Quedan pendientes PostGIS y las instrucciones y verificación del despliegue separado de staging y producción. Consulta el [registro de QA](QA-TESTING.md#evidencia-de-grt-008).
+GRT-008 cubre infraestructura local. S0 está cerrado. Se verificó el arranque de la portada Inertia/React, Filament, Ionic y PostgreSQL 16 con PostGIS 3.7 desde dos checkouts de `00f519a`. Staging local y producción simulada tienen redes, volúmenes, bases y credenciales independientes. Consulta los [comandos y resultados de QA](QA-TESTING.md#staging-local-y-producción-simulada). El despliegue remoto queda para una etapa posterior.
 
 - [Instrucciones del repositorio](AGENTS.md)
 - [Instrucciones de la app móvil](gym-rat-app/AGENTS.md)

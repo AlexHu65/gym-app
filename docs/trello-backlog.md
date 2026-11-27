@@ -227,9 +227,9 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 
 **Para iniciar:** confirmar estructura y disponibilidad del equipo; definir runtime/versiones soportadas; no guardar secretos en Git.
 
-**Entregable:** estructura inicial documentada, `.gitignore`, ejemplo de configuración sin secretos, instrucciones de desarrollo y despliegue.
+**Entregable:** estructura inicial documentada, `.gitignore`, ejemplo de configuración sin secretos, instrucciones de desarrollo y arranque reproducible de ambientes locales.
 
-**Aceptación:** un desarrollador puede levantar cada componente siguiendo instrucciones reproducibles; staging separado de producción.
+**Aceptación:** un desarrollador puede levantar cada componente desde un checkout limpio. Staging local y producción simulada tienen puertos, redes, bases, volúmenes y credenciales independientes. PostgreSQL 16 ofrece PostGIS. El despliegue remoto queda para una etapa posterior.
 
 **Dependencias:** S0 terminado.
 
@@ -240,9 +240,8 @@ Fechas de tiendas son una meta, no garantía de aprobación. Si el alcance o el 
 - [x] Versionar Laravel, Filament y el cliente Ionic/Angular/Capacitor junto con sus archivos de bloqueo y Compose independientes en `9ece7f6`.
 - [x] Verificar el arranque desde un checkout limpio. PostgreSQL saludable y HTTP 200 para la portada Laravel, acceso de Filament y cliente Ionic en navegador. Ver [evidencia de QA](../QA-TESTING.md#evidencia-de-grt-008).
 - [x] Integrar Inertia/React y crear la portada inicial. Compilación con Vite en Docker satisfactoria. La evidencia HTTP del commit `9ece7f6` corresponde a la portada anterior.
-- [ ] Documentar y verificar la disponibilidad de PostGIS. La imagen PostgreSQL local consultada carece de la extensión.
-- [ ] Documentar el despliegue y verificar que staging y producción usan configuración, bases, credenciales y URL independientes.
-
+- [x] Verificar la disponibilidad de PostGIS 3.7.0 en PostgreSQL 16.16 mediante [Compose complementario](../gym-rat-web/compose.postgis.yaml).
+- [x] Levantar Inertia/React, Filament e Ionic en staging local y producción simulada desde `00f519a`. Comprobar la separación de bases con un dato sintético exclusivo de staging. Ver [resultado de QA](../QA-TESTING.md#resultado-de-la-separación-local).
 
 ### [GRT-009] Definir arquitectura modular y contratos API
 **Épica:** E03 · **Puntos:** 5 · **Responsable:** Backend
