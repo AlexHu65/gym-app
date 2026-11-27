@@ -13,14 +13,27 @@ Las URL y cuentas de prueba de staging se registrarán al aprovisionar el ambien
 ## Verificación local de GRT-008
 
 1. Confirma que Git ignora los archivos privados `gym-rat-web/.env` y `gym-rat-app/.env`, y permite versionar las plantillas `.env.example`, `.env.staging.example` y `.env.production.example` de ambos componentes.
-2. Configura `DB_PASSWORD` en `gym-rat-web/.env` y arranca PostgreSQL desde la raíz. El servicio debe quedar saludable.
-3. Reinicia el servicio y confirma que el volumen conserva los datos. Consulta las instrucciones de [arranque y detención](README.md#postgresql-local-con-docker).
+2. Configura `DB_PASSWORD` en `gym-rat-web/.env` y arranca PostgreSQL desde `gym-rat-web/`. El servicio debe quedar saludable.
+3. Reinicia el servicio y confirma que el volumen conserva los datos. Consulta las instrucciones de [arranque y detención](README.md#web-y-postgresql).
 4. Cuando se aprovisionen los despliegues, confirma que la compilación de staging apunta a su propia API y que sus operaciones quedan en la base de staging. Comprueba que staging y producción tienen depuración desactivada y usan configuración y credenciales separadas.
 
 ```sh
-docker compose --env-file gym-rat-web/.env up -d --wait postgres
-docker compose --env-file gym-rat-web/.env ps postgres
+docker compose up -d --wait postgres
+docker compose ps postgres
 ```
+
+## Evidencia de GRT-008 — 27 de noviembre de 2026
+
+| Verificación | Comando o consulta | Resultado |
+| --- | --- | --- |
+| PostgreSQL local | `docker compose ps` desde `gym-rat-web/` | PostgreSQL 16 saludable, publicado en `127.0.0.1:5432`. |
+| Migraciones Laravel | `php artisan migrate:status` dentro del contenedor web | Las tres migraciones iniciales figuran como aplicadas. |
+| Sitio web | `curl` a `http://127.0.0.1:8000/` | HTTP 200. |
+| Pantalla de acceso de Filament | `curl` a `http://127.0.0.1:8000/admin/login` | HTTP 200. |
+| Cliente móvil en navegador | `curl` a `http://127.0.0.1:8100/` | HTTP 200. |
+| Exclusión de configuración privada | `git check-ignore gym-rat-web/.env gym-rat-app/.env` | Ambos archivos ignorados por Git. |
+
+Los manifiestos y archivos de bloqueo existen en el directorio de trabajo. Queda pendiente versionarlos, repetir el arranque desde un checkout limpio, documentar la disponibilidad de PostGIS y verificar la separación de staging y producción en los destinos de despliegue. La evidencia HTTP cubre el arranque local y la pantalla de acceso del panel.
 
 ## Flujos de aceptación del MVP
 

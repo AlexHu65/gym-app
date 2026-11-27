@@ -7,4 +7,4 @@ Aplica las [instrucciones del repositorio](../AGENTS.md). Esta carpeta contiene 
 - Ofrece el desbloqueo de pago único no consumible mediante Apple In-App Purchase y Google Play Billing. Usa el estado de acceso validado por el backend y contempla la restauración de compras según el flujo de cada tienda.
 - Configura la URL de API y los identificadores de tienda por ambiente. Guarda los secretos de backend y las llaves de firma fuera del cliente y del repositorio.
 - Fija las versiones de Ionic, Angular, Capacitor y sus herramientas de desarrollo durante GRT-008. Sigue la regla de pruebas del AGENTS.md raíz.
-- Usa la URL del backend correspondiente al ambiente. Docker Compose administra PostgreSQL local. La compilación nativa de iOS se realiza con macOS y Xcode.
+- Usa la URL del backend correspondiente al ambiente. El Compose de esta carpeta instala las dependencias móviles. La compilación nativa de iOS se realiza con macOS y Xcode.

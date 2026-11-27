@@ -1,0 +1,10 @@
+name: gym-rat-app-local
+
+services:
+  dependencies:
+    build: .
+    user: "${GYM_RAT_UID:-1000}:${GYM_RAT_GID:-1000}"
+    environment:
+      HOME: /tmp
+    volumes:
+      - .:/workspace

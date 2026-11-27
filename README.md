@@ -38,17 +38,39 @@ Al desplegar Laravel, inyecta las variables del ambiente o aprovisiona un `.env`
 
 Para la app móvil, `API_BASE_URL` apunta a la API de ese ambiente y los identificadores de Apple y Google se completan al configurar las tiendas. En un dispositivo físico, usa una dirección del backend local accesible desde el dispositivo en lugar de `localhost`. La lectura de estas variables durante la compilación queda pendiente de integrar al inicializar Angular y Capacitor.
 
-## PostgreSQL local con Docker
+## Docker Compose por proyecto
 
-Instala Docker con Docker Compose. Desde la raíz del repositorio, completa `DB_PASSWORD` en `gym-rat-web/.env` con una contraseña de uso local y ejecuta:
+Cada proyecto tiene su propio `Dockerfile` y `compose.yaml`. Ejecuta los comandos dentro de la carpeta correspondiente. Para instalar dependencias, primero inicializa el proyecto y versiona sus manifiestos y archivos de bloqueo.
+
+### Web y PostgreSQL
+
+Completa `DB_PASSWORD` en `gym-rat-web/.env`. Desde `gym-rat-web/`, ejecuta:
 
 ```sh
-docker compose --env-file gym-rat-web/.env up -d --wait postgres
+GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)" docker compose up --build -d
+docker compose logs dependencies
 ```
 
-PostgreSQL 16 queda accesible desde el equipo en `127.0.0.1` y el puerto `DB_PORT` del archivo local. Compose conserva la base en un volumen. Si el volumen ya fue inicializado, cambiar las variables `DB_*` del archivo no modifica las credenciales creadas en PostgreSQL. Para detener el servicio y conservar los datos, ejecuta `docker compose --env-file gym-rat-web/.env stop postgres`.
+El servicio `dependencies` ejecuta `composer install` y `npm ci`. PostgreSQL 16 conserva los datos en un volumen y escucha en `127.0.0.1` en el puerto `DB_PORT`. Puedes iniciar solo la base con `docker compose up -d --wait postgres` y detenerla con `docker compose stop postgres`. Cambiar las variables `DB_*` después de inicializar el volumen requiere actualizar las credenciales en PostgreSQL.
 
-El Compose de este repositorio es para desarrollo local. Staging y producción tendrán configuración, credenciales, redes y volúmenes separados. El contenedor de Laravel y el flujo de compilación móvil se definirán cuando estén inicializados ambos proyectos. Las compilaciones nativas de iOS requieren macOS y Xcode.
+Para servir Laravel dentro de Compose desde `gym-rat-web/`, usa el siguiente comando. `--no-reload` conserva las variables de conexión que Compose pasa al servidor PHP.
+
+```sh
+docker compose run --rm --no-deps -p 127.0.0.1:8000:8000 dependencies \
+  php artisan serve --host=0.0.0.0 --port=8000 --no-reload
+```
+
+### App móvil
+
+Desde `gym-rat-app/`, ejecuta:
+
+```sh
+GYM_RAT_UID="$(id -u)" GYM_RAT_GID="$(id -g)" docker compose up --build
+```
+
+El servicio `dependencies` ejecuta `npm ci` para la app. Las compilaciones nativas de iOS requieren macOS y Xcode.
+
+Los servicios de instalación terminan al completar su trabajo. Las imágenes usan PHP 8.4, Composer 2 y Node 24 como base provisional. Staging y producción tendrán configuración, credenciales, redes y almacenamiento propios. El arranque de Laravel y del servidor de desarrollo móvil queda pendiente de la inicialización de ambos proyectos.
 
 ## Estado de GRT-008
 

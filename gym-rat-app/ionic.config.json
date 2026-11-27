@@ -1,0 +1,7 @@
+{
+  "name": "gym-rat-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

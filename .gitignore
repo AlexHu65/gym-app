@@ -25,8 +25,8 @@ vendor/
 /gym-rat-web/storage/*.key
 
 # Datos y configuración local de Docker
-/compose.override.yaml
-/compose.override.yml
+compose.override.yaml
+compose.override.yml
 /.docker-data/
 
 # Llaves y firma móvil
